@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OminDev | منصة تعليمية ذكية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== المظاهر: فاتح / مظلم / كيوت ===== */
+:root,[data-theme="light"]{color-scheme:light;--bg:#fff;--surface:#fff;--s2:#f3f4f6;--line:#e5e7eb;--text:#1f2937;--mute:#6b7280;--p:#2563eb;--pd:#1d4ed8;--pl:#eff6ff;--on:#fff;--g1:#eff6ff;--g2:linear-gradient(135deg,#2563eb,#38bdf8);--b1:rgba(37,99,235,.10);--b2:rgba(56,189,248,.12);--note-bg:#fffbeb;--note-l:#fde68a;--note-t:#92400e;--ok-bg:#f0fdf4;--ok:#16a34a;--red:#dc2626;--r:14px;--sh:0 2px 12px rgba(15,23,42,.07);--shh:0 10px 24px rgba(37,99,235,.18);--pill:10px}
+[data-theme="dark"]{color-scheme:dark;--bg:#0b1220;--surface:#111a2e;--s2:#17223a;--line:#24314d;--text:#e5eaf3;--mute:#94a3b8;--p:#3b82f6;--pd:#60a5fa;--pl:rgba(59,130,246,.16);--on:#fff;--g1:#13203d;--g2:linear-gradient(135deg,#60a5fa,#a78bfa);--b1:rgba(59,130,246,.16);--b2:rgba(167,139,250,.12);--note-bg:#2a2412;--note-l:#4d4220;--note-t:#fcd34d;--ok-bg:#10281b;--ok:#4ade80;--red:#f87171;--sh:0 2px 14px rgba(0,0,0,.4);--shh:0 10px 28px rgba(0,0,0,.5)}
+[data-theme="cute"]{color-scheme:light;--bg:#fff7fb;--surface:#fff;--s2:#ffeaf4;--line:#ffd3e6;--text:#5b3a53;--mute:#9b7a92;--p:#ec4899;--pd:#db2777;--pl:#ffe4f1;--on:#fff;--g1:#ffe4f1;--g2:linear-gradient(135deg,#ec4899,#a78bfa);--b1:rgba(236,72,153,.14);--b2:rgba(167,139,250,.18);--note-bg:#fff4d6;--note-l:#ffe29a;--note-t:#8a5a00;--ok-bg:#e8fbef;--ok:#16a34a;--red:#e11d48;--r:26px;--sh:0 4px 16px rgba(236,72,153,.13);--shh:0 12px 28px rgba(236,72,153,.28);--pill:99px}
+[data-theme="neon"]{color-scheme:dark;--bg:#0a0614;--surface:#130c24;--s2:#1b1133;--line:#33205e;--text:#f3ecff;--mute:#a798c9;--p:#c084fc;--pd:#e9d5ff;--pl:rgba(168,85,247,.18);--on:#fff;--g1:#221046;--g2:linear-gradient(135deg,#a855f7,#4f7cff);--b1:rgba(217,70,239,.22);--b2:rgba(34,211,238,.18);--note-bg:#241a07;--note-l:#5c4510;--note-t:#fde047;--ok-bg:#0f2a17;--ok:#4ade80;--red:#fb7185;--r:18px;--sh:0 0 0 1px rgba(168,85,247,.12),0 4px 18px rgba(0,0,0,.5);--shh:0 0 22px rgba(168,85,247,.55);--pill:14px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:'Cairo','Tajawal',Tahoma,sans-serif;background:var(--bg);color:var(--text);line-height:1.8;transition:background .3s,color .3s}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(520px 360px at 8% 12%,var(--b1),transparent 70%),radial-gradient(560px 420px at 92% 88%,var(--b2),transparent 70%)}
+h1{font-size:1.7rem;margin:.2rem 0 .8rem}h2{font-size:1.25rem;margin:1.6rem 0 .8rem}h3{margin:.2rem 0 .4rem;font-size:1.05rem}
+p{margin:.3rem 0 .8rem}
+button,input,textarea,select{color:inherit}
+.topbar{position:fixed;inset:0 0 auto 0;height:60px;background:color-mix(in srgb,var(--surface) 85%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 14px;z-index:30}
+.brand{font-weight:700;font-size:1.4rem;direction:ltr}.brand span{background:var(--g2);-webkit-background-clip:text;background-clip:text;color:transparent}
+[data-theme="cute"] .brand::after{content:" 🎀"}
+.badge{background:var(--pl);color:var(--p);padding:2px 12px;border-radius:99px;font-size:.8rem}
+.themes{margin-inline-start:auto;display:flex;gap:4px;background:var(--s2);padding:4px;border-radius:99px}
+.themes button{width:40px;height:40px;border:0;border-radius:50%;background:transparent;font-size:1.1rem;cursor:pointer;transition:.25s}
+.themes button[aria-pressed="true"]{background:var(--surface);box-shadow:var(--sh);transform:scale(1.08)}
+.icon-btn{width:44px;height:44px;border:1px solid var(--line);background:var(--surface);border-radius:var(--pill);font-size:1.3rem;cursor:pointer;transition:.2s}
+.icon-btn:hover{background:var(--s2)}
+.sidebar{position:fixed;top:60px;bottom:0;inset-inline-start:0;width:250px;background:var(--s2);border-inline-end:1px solid var(--line);padding:14px;overflow-y:auto;z-index:25;transform:translateX(100%);transition:transform .25s}
+.nav-open .sidebar{transform:none}
+.sidebar button{display:flex;align-items:center;gap:10px;width:100%;min-height:46px;padding:8px 14px;margin-bottom:6px;border:0;border-radius:var(--pill);background:transparent;font:inherit;cursor:pointer;text-align:start;transition:.2s}
+.sidebar button:hover{background:var(--pl);transform:translateX(-4px)}
+.sidebar button[aria-current="page"]{background:var(--g2);color:var(--on);box-shadow:var(--shh)}
+.overlay{display:none;position:fixed;inset:60px 0 0 0;background:rgba(0,0,0,.4);z-index:20}
+.main{padding:84px 20px 40px;max-width:1100px;margin:0 auto;transition:padding .25s}
+section:not([hidden]){animation:in .35s}
+@keyframes in{from{opacity:0;transform:translateY(8px)}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);padding:20px;transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s,background .3s}
+.hero{background:linear-gradient(135deg,var(--g1),var(--surface));position:relative;overflow:hidden}
+.hero::after{content:"✨";position:absolute;inset-block-start:10px;inset-inline-end:16px;font-size:2rem;opacity:.5}
+[data-theme="cute"] .hero::after{content:"🌸";font-size:2.6rem;opacity:.8}
+.hero h1{background:var(--g2);-webkit-background-clip:text;background-clip:text;color:transparent;font-size:2rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+.tool:hover,.svc:hover{transform:translateY(-5px);box-shadow:var(--shh)}
+.ico{display:grid;place-items:center;width:54px;height:54px;border-radius:calc(var(--r) - 4px);background:var(--pl);font-size:1.6rem;margin-bottom:8px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.stat{text-align:center}.stat b{display:block;font-size:2rem;background:var(--g2);-webkit-background-clip:text;background-clip:text;color:transparent}.stat span{color:var(--mute);font-size:.9rem}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.btn{min-height:44px;padding:8px 22px;border:1px solid transparent;background:var(--g2);color:var(--on);border-radius:var(--pill);font:inherit;font-weight:600;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),box-shadow .25s,filter .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:var(--shh);filter:brightness(1.05)}
+.btn:active{transform:scale(.96)}
+.btn.ghost{background:transparent;color:var(--p);border-color:var(--p)}.btn.ghost:hover{background:var(--pl);box-shadow:none}
+.btn.danger{background:transparent;color:var(--red);border-color:var(--red)}.btn.danger:hover{background:color-mix(in srgb,var(--red) 12%,transparent);box-shadow:none}
+.btn.small{min-height:38px;padding:4px 16px;font-size:.9rem}
+.btn:disabled{opacity:.6;cursor:wait}
+.btn.loading::after{content:"";display:inline-block;width:14px;height:14px;margin-inline-start:8px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;vertical-align:middle;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.form label{display:block;font-weight:600;margin:10px 0 4px}
+input,textarea,select{width:100%;padding:10px 14px;border:1.5px solid var(--line);border-radius:calc(var(--r) - 4px);font:inherit;background:var(--surface);transition:.2s}
+input:focus,textarea:focus,select:focus{outline:0;border-color:var(--p);box-shadow:0 0 0 4px var(--pl)}
+textarea{resize:vertical}
+.note{background:var(--note-bg);border:1px solid var(--note-l);color:var(--note-t);border-radius:calc(var(--r) - 4px);padding:8px 14px;font-size:.92rem}
+.result{margin-top:16px;border-inline-start:5px solid var(--p)}
+.result li{margin-bottom:6px}
+.qlist,.list{display:grid;gap:12px;margin-top:16px}
+.item{display:flex;flex-direction:column;gap:6px}
+.item small{color:var(--mute)}
+.ans{background:var(--ok-bg);color:var(--ok);padding:6px 14px;border-radius:calc(var(--r) - 8px);font-weight:600}
+.empty{text-align:center;color:var(--mute);padding:30px;border:2px dashed var(--line);border-radius:var(--r);background:var(--surface)}
+.toasts{position:fixed;bottom:16px;inset-inline:16px;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:60;pointer-events:none}
+.toast{background:var(--text);color:var(--bg);padding:10px 22px;border-radius:var(--pill);box-shadow:var(--sh);animation:pop .3s cubic-bezier(.34,1.56,.64,1)}
+.toast.success{background:var(--ok);color:#fff}.toast.error{background:var(--red);color:#fff}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.9)}}
+dialog{border:1px solid var(--line);border-radius:var(--r);padding:22px;width:min(560px,92vw);max-height:85vh;box-shadow:0 20px 50px rgba(0,0,0,.3);background:var(--surface);color:var(--text)}
+dialog::backdrop{background:rgba(0,0,0,.45);backdrop-filter:blur(2px)}
+#dlgBody{white-space:pre-wrap;max-height:50vh;overflow-y:auto;overflow-wrap:anywhere}
+.prose h3{color:var(--p)}
+.item p,.result li,.qlist p{overflow-wrap:anywhere}
+@media(min-width:900px){.nav-open .main{padding-inline-start:270px;max-width:none}.nav-open .main>section{max-width:1000px}}
+@media(max-width:899px){.nav-open .overlay{display:block}}
+@media(max-width:560px){.main{padding-inline:12px}h1{font-size:1.4rem}.hero h1{font-size:1.5rem}.stats{gap:8px}.btn{flex:1 1 100%}.badge{display:none}.brand{font-size:1.2rem}.themes button{width:36px;height:36px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+[data-theme="neon"] .brand::after{content:" ⚡"}
+[data-theme="neon"] .hero::after{content:"⚡";font-size:2.6rem;opacity:.9;filter:drop-shadow(0 0 10px #22d3ee)}
+[data-theme="neon"] .btn:not(.ghost):not(.danger){box-shadow:0 0 16px rgba(168,85,247,.45)}
+[data-theme="neon"] .card:hover{border-color:#a855f7}
+[data-theme="neon"] .brand span,[data-theme="neon"] .hero h1,[data-theme="neon"] .stat b{filter:drop-shadow(0 0 8px rgba(168,85,247,.6))}
+[data-theme="neon"] .sidebar button[aria-current="page"]{box-shadow:0 0 18px rgba(168,85,247,.6)}
+[data-theme="neon"] .toast.success{color:#052e16}
+@media(max-width:400px){.themes button{width:33px;height:33px;font-size:1rem}.topbar{gap:6px;padding:0 10px}.brand{font-size:1.1rem}}
+.theme-toast{position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;min-width:230px;padding:12px 22px 14px 26px;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(14px);color:var(--text);border:1px solid var(--line);border-radius:calc(var(--r) + 6px);box-shadow:var(--shh);animation:themeIn .45s cubic-bezier(.34,1.56,.64,1)}
+.theme-toast .tico{display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:var(--g2);font-size:1.4rem;box-shadow:var(--shh);animation:spinIn .6s ease}
+.theme-toast b{display:block;line-height:1.3}
+.theme-toast small{color:var(--mute)}
+.theme-toast::after{content:"";position:absolute;inset:auto 0 0 0;height:3px;background:var(--g2);transform-origin:right;animation:bar 2.6s linear forwards}
+@keyframes themeIn{from{opacity:0;transform:translateY(24px) scale(.85)}}
+@keyframes spinIn{from{transform:rotate(-200deg) scale(.4)}}
+@keyframes bar{to{transform:scaleX(0)}}
+button.stat{font:inherit;color:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:0}
+button.stat:hover,.stat:hover{transform:translateY(-4px);box-shadow:var(--shh)}
+.cnt{margin-inline-start:auto;min-width:24px;padding:0 8px;border-radius:99px;background:var(--pl);color:var(--p);font-size:.8rem;font-style:normal;font-weight:700;text-align:center}
+.cnt[hidden]{display:none}
+.sidebar button[aria-current="page"] .cnt{background:rgba(255,255,255,.25);color:var(--on)}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <button id="menuBtn" class="icon-btn" aria-label="فتح أو إغلاق القائمة الجانبية">☰</button>
+  <div class="brand">Omin<span>Dev</span></div>
+  <span class="badge">نسخة تجريبية</span>
+  <div class="themes" role="group" aria-label="اختيار المظهر">
+    <button data-theme-btn="light" title="المظهر الفاتح" aria-label="المظهر الفاتح">☀️</button>
+    <button data-theme-btn="dark" title="المظهر المظلم" aria-label="المظهر المظلم">🌙</button>
+    <button data-theme-btn="cute" title="الوضع اللطيف" aria-label="الوضع اللطيف">🌸</button>
+    <button data-theme-btn="neon" title="وضع الوهج" aria-label="وضع الوهج">⚡</button>
+  </div>
+</header>
+<div id="overlay" class="overlay"></div>
+<aside id="sidebar" class="sidebar"><nav id="nav" aria-label="التنقل الرئيسي"></nav></aside>
+
+<main id="main" class="main">
+<section id="home" data-title="الرئيسية" data-icon="🏠">
+  <div class="hero card">
+    <h1>مرحباً بك في <bdi>OminDev</bdi></h1>
+    <p>منصة تعليمية تساعد طلاب الجامعات السورية على فهم محاضراتهم وتنظيمها ومراجعتها بسهولة. جميع الأدوات تعمل داخل متصفحك ولا ترسل بياناتك إلى أي خادم.</p>
+    <div class="row"><button class="btn" data-go="summarizer">ابدأ بتلخيص محاضرة</button><button class="btn ghost" data-go="questions">ولّد أسئلة مراجعة</button></div>
+  </div>
+  <div class="stats">
+    <button class="card stat" data-go="saved" aria-label="الانتقال إلى محاضراتي المحفوظة"><b id="stLec">0</b><span id="stLecL">محاضرات محفوظة</span></button>
+    <button class="card stat" data-go="feedback" aria-label="الانتقال إلى الملاحظات"><b id="stFb">0</b><span id="stFbL">ملاحظات محفوظة</span></button>
+    <div class="card stat"><b>4</b><span>أدوات دراسية</span></div>
+  </div>
+  <h2>أدواتك الدراسية</h2>
+  <div class="grid">
+    <article class="card tool"><span class="ico">📝</span><h3>ملخّص المحاضرات</h3><p>استخرج أهم جمل المحاضرة تلقائياً.</p><button class="btn small" data-go="summarizer">افتح</button></article>
+    <article class="card tool"><span class="ico">❓</span><h3>مولّد الأسئلة</h3><p>أسئلة إكمال فراغ من نص محاضرتك.</p><button class="btn small" data-go="questions">افتح</button></article>
+    <article class="card tool"><span class="ico">💡</span><h3>شرح مبسّط</h3><p>خطوات منظّمة لفهم أي مفهوم صعب.</p><button class="btn small" data-go="explain">افتح</button></article>
+    <article class="card tool"><span class="ico">📚</span><h3>محاضراتي</h3><p>ارجع إلى محاضراتك وملخصاتها المحفوظة.</p><button class="btn small" data-go="saved">افتح</button></article>
+  </div>
+</section>
+
+<section id="summarizer" data-title="ملخّص المحاضرات" data-icon="📝" hidden>
+  <h1>ملخّص المحاضرات</h1>
+  <div class="card form">
+    <label for="sumTitle">عنوان المحاضرة</label>
+    <input id="sumTitle" type="text" maxlength="100" placeholder="مثال: مقدمة في قواعد البيانات">
+    <label for="sumText">نص المحاضرة</label>
+    <textarea id="sumText" rows="9" placeholder="الصق محتوى المحاضرة هنا..."></textarea>
+    <div class="row"><button id="sumBtn" class="btn">لخّص النص</button><button id="sumClear" class="btn ghost">مسح</button></div>
+  </div>
+  <div id="sumOut" class="card result" hidden>
+    <h3>الملخّص</h3><ul id="sumList"></ul>
+    <div class="row"><button id="sumCopy" class="btn ghost small">📋 نسخ</button><button id="sumSave" class="btn small">💾 حفظ المحاضرة والملخّص</button></div>
+  </div>
+</section>
+
+<section id="questions" data-title="مولّد الأسئلة" data-icon="❓" hidden>
+  <h1>مولّد الأسئلة</h1>
+  <div class="card form">
+    <label for="qText">نص المحاضرة</label>
+    <textarea id="qText" rows="8" placeholder="الصق نص المحاضرة لتوليد أسئلة منه..."></textarea>
+    <button id="qBtn" class="btn">ولّد الأسئلة</button>
+  </div>
+  <div id="qList" class="qlist"></div>
+</section>
+
+<section id="explain" data-title="شرح مبسّط" data-icon="💡" hidden>
+  <h1>شرح مبسّط</h1>
+  <div class="card form">
+    <label for="exInput">المفهوم أو الموضوع</label>
+    <input id="exInput" type="text" maxlength="80" placeholder="مثال: التطبيع في قواعد البيانات">
+    <button id="exBtn" class="btn">اعرض خطوات الفهم</button>
+  </div>
+  <div id="exOut" class="card result" hidden></div>
+</section>
+
+<section id="saved" data-title="محاضراتي المحفوظة" data-icon="📚" hidden>
+  <h1>محاضراتي المحفوظة</h1>
+  <p class="note">تُحفظ البيانات في متصفحك فقط (localStorage) ولا تنتقل بين الأجهزة.</p>
+  <div id="lecList" class="list"></div>
+</section>
+
+<section id="feedback" data-title="الملاحظات والاقتراحات" data-icon="💬" hidden>
+  <h1>الملاحظات والاقتراحات</h1>
+  <div class="card form">
+    <label for="fbRate">التقييم</label>
+    <select id="fbRate"><option value="5">⭐⭐⭐⭐⭐ ممتاز</option><option value="4">⭐⭐⭐⭐ جيد جداً</option><option value="3">⭐⭐⭐ جيد</option><option value="2">⭐⭐ مقبول</option><option value="1">⭐ ضعيف</option></select>
+    <label for="fbText">ملاحظاتك واقتراحاتك</label>
+    <textarea id="fbText" rows="4" maxlength="600" placeholder="لا تكتب معلومات شخصية حساسة"></textarea>
+    <button id="fbBtn" class="btn">إرسال</button>
+  </div>
+  <h2>الملاحظات السابقة</h2>
+  <div id="fbList" class="list"></div>
+</section>
+
+<section id="services" data-title="الخدمات الرقمية" data-icon="🛠️" hidden>
+  <h1>الخدمات الرقمية</h1>
+  <p>يقدّم OminDev حلولاً رقمية للأفراد والمؤسسات.</p>
+  <div id="svcGrid" class="grid"></div>
+</section>
+
+<section id="about" data-title="عن OminDev" data-icon="ℹ️" hidden>
+  <h1>عن OminDev</h1>
+  <div class="card prose">
+    <h3>الهدف</h3><p>جعل الدراسة الجامعية أوضح وأكثر تنظيماً عبر أدوات بسيطة تعمل من المتصفح مباشرة.</p>
+    <h3>المشكلة التي نحلّها</h3><p>يواجه الطلاب محاضرات طويلة ومتفرقة يصعب تلخيصها ومراجعتها، وغالباً دون أدوات مناسبة تنظّم موادهم.</p>
+    <h3>كيف نساعد؟</h3><p>يلخّص الطالب نص المحاضرة، ويولّد أسئلة مراجعة، ويحفظ محاضراته وملخصاته في مكان واحد يرجع إليه متى شاء.</p>
+    <h3>المستقبل</h3><p>يمكن ربط المنصة لاحقاً بخدمات ذكاء اصطناعي حقيقية، وتوسيعها لتشمل حسابات للطلاب ومزامنة بين الأجهزة وخدمات رقمية إضافية.</p>
+  </div>
+</section>
+</main>
+
+<div id="toasts" class="toasts" aria-live="polite"></div>
+<dialog id="dlg"><h3 id="dlgTitle"></h3><div id="dlgBody"></div><div id="dlgAct" class="row"></div></dialog>
+<script>
+/* OminDev — واجهة أمامية بلا خادم. البيانات تُحفظ في localStorage فقط. */
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const KEY = { lec: 'omindev_lectures', fb: 'omindev_feedback', pref: 'omindev_prefs' };
+
+/* ---------- التخزين المحلي مع معالجة الأخطاء ---------- */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
+  set(k, v) {
+    try { localStorage.setItem(k, JSON.stringify(v)); return true; }
+    catch { toast('تعذّر الحفظ: التخزين المحلي غير متاح أو ممتلئ', 'error'); return false; }
+  }
+};
+
+/* ---------- أدوات واجهة آمنة (textContent فقط) ---------- */
+function h(tag, props = {}, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(props)) {
+    if (k === 'class') e.className = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v);
+  }
+  kids.flat().forEach(c => e.append(c));
+  return e;
+}
+function toast(msg, type = 'info') {
+  const t = h('div', { class: 'toast ' + type }, msg);
+  $('#toasts').append(t);
+  setTimeout(() => t.remove(), 3200);
+}
+function showDialog(title, body, actions = []) {
+  $('#dlgTitle').textContent = title;
+  $('#dlgBody').textContent = body;
+  const box = $('#dlgAct'); box.replaceChildren();
+  actions.forEach(a => box.append(h('button', { class: 'btn small ' + (a.cls || ''), onclick: () => { $('#dlg').close(); a.fn && a.fn(); } }, a.label)));
+  box.append(h('button', { class: 'btn small ghost', onclick: () => $('#dlg').close() }, 'إغلاق'));
+  $('#dlg').showModal();
+}
+function confirmDelete(msg, onYes) {
+  showDialog('تأكيد الحذف', msg, [{ label: 'نعم، احذف', cls: 'danger', fn: onYes }]);
+}
+/* يُظهر مؤشر تحميل قصير قبل تنفيذ العملية */
+function withLoading(btn, fn) {
+  btn.disabled = true; btn.classList.add('loading');
+  setTimeout(() => { try { fn(); } finally { btn.disabled = false; btn.classList.remove('loading'); } }, 600);
+}
+const fmtDate = iso => new Date(iso).toLocaleDateString('ar', { year: 'numeric', month: 'long', day: 'numeric' });
+
+/* ---------- التنقل والشريط الجانبي ---------- */
+const prefs = store.get(KEY.pref, {});
+const sections = $$('main > section');
+const nav = $('#nav');
+sections.forEach(s => nav.append(h('button', { 'data-nav': s.id, onclick: () => go(s.id) }, h('span', {}, s.dataset.icon), s.dataset.title, ['saved', 'feedback'].includes(s.id) ? h('em', { class: 'cnt', hidden: '' }, '0') : '')));
+
+function setNav(open) {
+  document.body.classList.toggle('nav-open', open);
+  if (innerWidth >= 900) { prefs.nav = open; store.set(KEY.pref, prefs); }
+}
+function show(id) {
+  if (!document.getElementById(id)) id = 'home';
+  sections.forEach(s => s.hidden = s.id !== id);
+  $$('#nav button').forEach(b => b.toggleAttribute('aria-current', b.dataset.nav === id));
+  $$('#nav button[aria-current]').forEach(b => b.setAttribute('aria-current', 'page'));
+  if (innerWidth < 900) document.body.classList.remove('nav-open');
+  prefs.page = id; store.set(KEY.pref, prefs);
+  if (id === 'home') renderStats();
+  scrollTo({ top: 0 });
+}
+/* التنقل عبر الـ hash ليعمل زر الرجوع في المتصفح والهاتف داخل الموقع */
+function go(id) { if (location.hash.slice(1) === id) show(id); else location.hash = id; }
+addEventListener('hashchange', () => show(location.hash.slice(1) || 'home'));
+$('#menuBtn').onclick = () => setNav(!document.body.classList.contains('nav-open'));
+$('#overlay').onclick = () => setNav(false);
+$$('[data-go]').forEach(b => b.onclick = () => go(b.dataset.go));
+
+/* ---------- معالجة النص (خوارزمية بسيطة وليست ذكاءً اصطناعياً) ---------- */
+const STOP = new Set('في من على إلى عن أن إن كان كانت هذا هذه ذلك التي الذي ما لا مع أو ثم هو هي كل قد بين عند لم لن هنا تم أي'.split(' '));
+const words = s => s.match(/[\u0600-\u06FFA-Za-z0-9]+/g) || [];
+const sentences = t => t.split(/[.!?؟\n]+/).map(s => s.trim()).filter(s => words(s).length >= 4);
+
+function summarize(text) {
+  const ss = sentences(text);
+  if (ss.length <= 3) return ss;
+  const freq = {};
+  words(text).forEach(w => { if (w.length > 2 && !STOP.has(w)) freq[w] = (freq[w] || 0) + 1; });
+  return ss.map((s, i) => ({ s, i, v: words(s).reduce((a, w) => a + (freq[w] || 0), 0) / Math.sqrt(words(s).length) }))
+    .sort((a, b) => b.v - a.v).slice(0, Math.min(5, Math.ceil(ss.length / 3)))
+    .sort((a, b) => a.i - b.i).map(x => x.s);
+}
+function makeQuestions(text) {
+  return sentences(text).slice(0, 10).map(s => {
+    const w = words(s).filter(x => x.length > 3 && !STOP.has(x)).sort((a, b) => b.length - a.length)[0];
+    return w ? { q: s.replace(w, '_____'), a: w } : null;
+  }).filter(Boolean).slice(0, 5);
+}
+
+/* ---------- ملخّص المحاضرات ---------- */
+let lastSummary = [];
+$('#sumBtn').onclick = e => {
+  const text = $('#sumText').value.trim();
+  if (!text) return toast('الرجاء لصق نص المحاضرة أولاً', 'error');
+  withLoading(e.currentTarget, () => {
+    lastSummary = summarize(text);
+    if (!lastSummary.length) return toast('النص قصير جداً أو لا يحتوي على جمل كافية', 'error');
+    $('#sumList').replaceChildren(...lastSummary.map(s => h('li', {}, s)));
+    $('#sumOut').hidden = false;
+    toast('تم إنشاء الملخّص', 'success');
+  });
+};
+$('#sumClear').onclick = () => {
+  $('#sumTitle').value = ''; $('#sumText').value = ''; $('#sumOut').hidden = true; lastSummary = [];
+};
+$('#sumCopy').onclick = async () => {
+  try { await navigator.clipboard.writeText(lastSummary.join('\n')); toast('تم نسخ الملخّص', 'success'); }
+  catch { toast('النسخ غير مدعوم في هذا المتصفح', 'error'); }
+};
+$('#sumSave').onclick = () => {
+  const title = $('#sumTitle').value.trim(), text = $('#sumText').value.trim();
+  if (!title) return toast('الرجاء إدخال عنوان المحاضرة', 'error');
+  if (text.length < 20) return toast('نص المحاضرة قصير جداً', 'error');
+  const list = store.get(KEY.lec, []);
+  list.unshift({ id: Date.now(), title, text, summary: lastSummary.join('\n'), date: new Date().toISOString() });
+  if (store.set(KEY.lec, list)) { toast('تم حفظ المحاضرة', 'success'); renderLectures(); }
+};
+
+/* ---------- مولّد الأسئلة ---------- */
+$('#qBtn').onclick = e => {
+  const text = $('#qText').value.trim();
+  if (!text) return toast('الرجاء لصق نص المحاضرة أولاً', 'error');
+  withLoading(e.currentTarget, () => {
+    const qs = makeQuestions(text);
+    if (!qs.length) { $('#qList').replaceChildren(); return toast('لم يتم العثور على جمل كافية لتوليد أسئلة', 'error'); }
+    $('#qList').replaceChildren(...qs.map((x, i) => {
+      const ans = h('div', { class: 'ans', hidden: '' }, 'الإجابة: ' + x.a);
+      const btn = h('button', { class: 'btn ghost small', onclick: () => { ans.hidden = !ans.hidden; btn.textContent = ans.hidden ? 'إظهار الإجابة' : 'إخفاء الإجابة'; } }, 'إظهار الإجابة');
+      return h('div', { class: 'card item' }, h('b', {}, `السؤال ${i + 1} — أكمل الفراغ:`), h('p', {}, x.q), ans, h('div', {}, btn));
+    }));
+    toast('تم توليد الأسئلة', 'success');
+  });
+};
+
+/* ---------- شرح مبسّط (وضع تجريبي: خطوات عامة فقط) ---------- */
+$('#exBtn').onclick = e => {
+  const c = $('#exInput').value.trim();
+  if (!c) return toast('الرجاء إدخال المفهوم أولاً', 'error');
+  withLoading(e.currentTarget, () => {
+    const steps = [
+      `عرّف «${c}» بجملة واحدة بكلماتك الخاصة.`,
+      `اسأل نفسك: ما المشكلة التي ظهر «${c}» ليحلّها؟`,
+      `ابحث عن مثال من الحياة اليومية يشبه «${c}».`,
+      `اذكر المفاهيم المرتبطة بـ«${c}» وكيف ترتبط به.`,
+      `اشرح «${c}» بصوت عالٍ لزميل؛ وما تعثّرت فيه راجعه في محاضرتك.`
+    ];
+    $('#exOut').replaceChildren(h('h3', {}, 'خطوات لفهم: ' + c), h('ol', {}, steps.map(s => h('li', {}, s))));
+    $('#exOut').hidden = false;
+  });
+};
+
+/* ---------- المحاضرات المحفوظة ---------- */
+function emptyBox(msg) { return h('div', { class: 'empty' }, msg); }
+function renderLectures() {
+  const list = store.get(KEY.lec, []);
+  $('#lecList').replaceChildren(...(list.length ? list.map(l => h('article', { class: 'card item' },
+    h('h3', {}, l.title), h('small', {}, 'تاريخ الحفظ: ' + fmtDate(l.date)),
+    h('div', { class: 'row' },
+      h('button', { class: 'btn small', onclick: () => showDialog(l.title, l.text) }, 'قراءة المحاضرة'),
+      h('button', { class: 'btn small ghost', onclick: () => showDialog('ملخّص: ' + l.title, l.summary || 'لا يوجد ملخّص محفوظ لهذه المحاضرة.') }, 'عرض الملخّص'),
+      h('button', { class: 'btn small danger', onclick: () => confirmDelete(`هل تريد حذف «${l.title}» نهائياً؟`, () => {
+        if (store.set(KEY.lec, store.get(KEY.lec, []).filter(x => x.id !== l.id))) { renderLectures(); toast('تم الحذف', 'success'); }
+      }) }, 'حذف')))) : [emptyBox('لا توجد محاضرات محفوظة بعد. لخّص محاضرة واحفظها لتظهر هنا.')]));
+  renderStats();
+}
+
+/* ---------- الملاحظات ---------- */
+$('#fbBtn').onclick = () => {
+  const text = $('#fbText').value.trim();
+  if (text.length < 5) return toast('الرجاء كتابة ملاحظة لا تقل عن 5 أحرف', 'error');
+  const list = store.get(KEY.fb, []);
+  list.unshift({ id: Date.now(), text, rate: +$('#fbRate').value, date: new Date().toISOString() });
+  if (store.set(KEY.fb, list)) { $('#fbText').value = ''; renderFeedback(); toast('شكراً لملاحظتك! تم الحفظ على جهازك', 'success'); }
+};
+function renderFeedback() {
+  const list = store.get(KEY.fb, []);
+  $('#fbList').replaceChildren(...(list.length ? list.map(f => h('article', { class: 'card item' },
+    h('div', {}, '⭐'.repeat(f.rate)), h('p', {}, f.text), h('small', {}, fmtDate(f.date)),
+    h('div', {}, h('button', { class: 'btn small danger', onclick: () => confirmDelete('هل تريد حذف هذه الملاحظة؟', () => {
+      if (store.set(KEY.fb, store.get(KEY.fb, []).filter(x => x.id !== f.id))) { renderFeedback(); toast('تم الحذف', 'success'); }
+    }) }, 'حذف')))) : [emptyBox('لا توجد ملاحظات محفوظة بعد.')]));
+  renderStats();
+}
+
+/* ---------- الخدمات الرقمية ---------- */
+const SERVICES = [
+  ['🌐', 'تصميم وتطوير المواقع', 'مواقع حديثة وسريعة وسهلة الاستخدام.', 'نصمّم ونطوّر مواقع تعريفية ومتاجر ومنصات تناسب هويتك، بتصميم متجاوب يعمل على جميع الأجهزة.'],
+  ['⚙️', 'حلول رقمية بسيطة', 'أدوات صغيرة تحل مشكلات عملية.', 'نبني أدوات مخصصة مثل نماذج التسجيل ولوحات المتابعة والحاسبات التي تخدم احتياج مؤسستك.'],
+  ['🔄', 'أتمتة سير العمل', 'وفّر الوقت بأتمتة المهام المتكررة.', 'نحوّل العمليات اليدوية المتكررة إلى خطوات آلية تقلل الأخطاء وتسرّع الإنجاز.'],
+  ['💻', 'خدمات برمجية أخرى', 'استشارات وتطوير حسب الطلب.', 'نقدّم استشارات تقنية وتطويراً مخصصاً لمشاريع الأفراد والمؤسسات الصغيرة.']
+];
+$('#svcGrid').replaceChildren(...SERVICES.map(([i, t, d, m]) => h('article', { class: 'card tool svc' },
+  h('span', { class: 'ico' }, i), h('h3', {}, t), h('p', {}, d),
+  h('button', { class: 'btn small', onclick: () => showDialog(t, m) }, 'المزيد'))));
+
+/* ---------- الإحصاءات (بيانات فعلية من جهازك) ---------- */
+/* صيغة العدد الصحيحة بالعربية (مفرد / مثنى / جمع) */
+const labelFor = (n, one, two, few) => n === 2 ? two : (n === 1 || n > 10) ? one : few;
+function countTo(el, n) {
+  const from = +el.textContent || 0;
+  if (from === n || matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = n; return; }
+  const t0 = performance.now();
+  (function tick(t) {
+    const p = Math.min((t - t0) / 500, 1);
+    el.textContent = Math.round(from + (n - from) * p);
+    if (p < 1) requestAnimationFrame(tick);
+  })(t0);
+}
+function renderStats() {
+  const nl = store.get(KEY.lec, []).length, nf = store.get(KEY.fb, []).length;
+  /* عند عدم وجود بيانات محفوظة تُعرض أرقام توضيحية (5 و 8) */
+  const dl = nl || 5, df = nf || 8;
+  countTo($('#stLec'), dl); countTo($('#stFb'), df);
+  $('#stLecL').textContent = labelFor(dl, 'محاضرة محفوظة', 'محاضرتان محفوظتان', 'محاضرات محفوظة');
+  $('#stFbL').textContent = labelFor(df, 'ملاحظة محفوظة', 'ملاحظتان محفوظتان', 'ملاحظات محفوظة');
+  [['saved', nl], ['feedback', nf]].forEach(([id, n]) => {
+    const c = $(`#nav [data-nav="${id}"] .cnt`);
+    if (c) { c.textContent = n; c.hidden = !n; }
+  });
+}
+
+/* ---------- المظهر: فاتح / مظلم / كيوت ---------- */
+const THEME_NAMES = {
+  light: ['☀️', 'الوضع الفاتح', 'نهار هادئ وواضح'],
+  dark: ['🌙', 'الوضع المظلم', 'راحة للعين في الليل'],
+  cute: ['🌸', 'الوضع اللطيف', 'أجواء ناعمة ولطيفة'],
+  neon: ['⚡', 'وضع الوهج', 'طاقة وحيوية للمذاكرة']
+};
+/* إشعار أنيق عند تغيير المظهر */
+function themeToast([icon, name, tagline]) {
+  $$('.theme-toast').forEach(x => x.remove());
+  const t = h('div', { class: 'toast theme-toast' },
+    h('span', { class: 'tico' }, icon),
+    h('div', {}, h('b', {}, name), h('small', {}, tagline)));
+  $('#toasts').append(t);
+  setTimeout(() => t.remove(), 2600);
+}
+function setTheme(t, save = true) {
+  if (!THEME_NAMES[t]) t = 'light';
+  document.documentElement.dataset.theme = t;
+  $$('[data-theme-btn]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.themeBtn === t)));
+  if (save) { prefs.theme = t; store.set(KEY.pref, prefs); themeToast(THEME_NAMES[t]); }
+}
+$$('[data-theme-btn]').forEach(b => b.onclick = () => setTheme(b.dataset.themeBtn));
+setTheme(prefs.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'), false);
+
+/* ---------- التهيئة ---------- */
+renderLectures(); renderFeedback();
+setNav(innerWidth >= 900 ? prefs.nav !== false : false);
+const start = location.hash.slice(1) || prefs.page || 'home';
+try { history.replaceState(null, '', '#home'); } catch {}  /* ليكون الرجوع من أي قسم إلى الرئيسية */
+show('home');
+if (start !== 'home' && document.getElementById(start)) go(start);
+})();
+</script>
+</body>
+</html>
